@@ -147,3 +147,16 @@ html.theme-transition *::after {
     background: rgba(245, 158, 11, 0.3);
     color: inherit;
 }
+
+
+/* Редакторы переходов SunduCAM: поля занимают всю ширину строки при любом числе полей в ветке.
+   Каждый элемент растёт до заполнения строки (flex-grow), а его базовая ширина задаёт, сколько
+   полей помещается в ряд: 3 на широком экране (как md=4), 2 на узком (не меньше 6 из 12 позиций),
+   по одному на совсем маленьком. Полноширинные элементы (xs=12 без других размеров: предпросмотр,
+   рисунок, контур) остаются на всю строку. */
+.seq-flow > .mud-grid-item { flex: 1 1 30%; max-width: 100%; min-width: 0; }
+@media (max-width: 959.98px) { .seq-flow > .mud-grid-item { flex-basis: 45%; } }
+@media (max-width: 399.98px) { .seq-flow > .mud-grid-item { flex-basis: 100%; } }
+.seq-flow > .mud-grid-item.mud-grid-item-md-12,
+.seq-flow > .mud-grid-item.mud-grid-item-xs-12:not([class*="mud-grid-item-sm"]):not([class*="mud-grid-item-md"]):not([class*="mud-grid-item-lg"]),
+.seq-flow > .mud-grid-item.flex-row-reverse { flex-basis: 100%; }
