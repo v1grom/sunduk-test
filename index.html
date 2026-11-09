@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 
 <style>
+    /* Логотип перекрашивается по скину: диск и контур — две маски (img/logo-disc.png, img/logo-mark.png), цвета из tokens.css */
+    .logo-mark {
+        display: inline-block;
+        position: relative;
+        background: var(--surface, #252526);
+        -webkit-mask: url(/img/logo-disc.png) center / contain no-repeat;
+        mask: url(/img/logo-disc.png) center / contain no-repeat;
+    }
+
+    .logo-mark > i {
+        position: absolute;
+        inset: 0;
+        background: var(--accent, #ff5722);
+        -webkit-mask: url(/img/logo-mark.png) center / contain no-repeat;
+        mask: url(/img/logo-mark.png) center / contain no-repeat;
+    }
+
     .logo {
         width: 75px;
         -webkit-animation-name: rotation;
@@ -96,6 +113,26 @@
     <title>Sunduk - Всякая хрень для ЧПУ</title>
     <base href="/" />
 
+    <script>
+        // Скин и тема до первой отрисовки: Blazor стартует позже, без этого мелькает чужая палитра.
+        // Ключи те же, что в AppSettings (Blazored.LocalStorage хранит значения как JSON).
+        (function () {
+            var skin = 'sunduk', dark = true;
+            try {
+                var s = JSON.parse(localStorage.getItem('app-skin'));
+                if (typeof s === 'string' && /^[a-z]+$/.test(s)) skin = s;
+                var d = JSON.parse(localStorage.getItem('theme-dark'));
+                if (typeof d === 'boolean') dark = d;
+            } catch (e) { }
+            var r = document.documentElement;
+            // ?density=touch|compact — принудительная плотность для проверки (по умолчанию решает pointer: coarse)
+            var dm = /[?&]density=(touch|compact)/.exec(location.search);
+            if (dm) r.dataset.density = dm[1];
+            r.dataset.skin = skin;
+            r.dataset.theme = dark ? 'dark' : 'light';
+            r.className += dark ? ' mud-dark' : ' mud-light';
+        })();
+    </script>
     <link href="/css/all.min.css" rel="stylesheet" />
     <link href="/css/fonts.css" rel="stylesheet" />
     <!-- Blazor.Common | Required CSS -->
@@ -103,6 +140,7 @@
     <!-- Blazor.Text.Editor | Required CSS -->
     <link href="_content/Blazor.Text.Editor/blazorTextEditor.css" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="css/tokens.css" rel="stylesheet" />
     <link href="css/mudblazor-override.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="manifest.webmanifest" rel="manifest" />
@@ -115,7 +153,7 @@
         <div id="app">
 
             <p style="position: absolute; top: 30vh; width: 100%; text-align: center">
-                <img src="/icon-512.png" class="logo" />
+                <span class="logo logo-mark"><i></i></span>
             </p>
         </div>
     </app>
@@ -128,6 +166,7 @@
     <script src="_framework/blazor.webassembly.w3qd1tpl0e.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/analytics.js"></script>
+    <script src="js/appearance.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <!-- Blazor.Common | Required CSS -->
     <script src="_content/Blazor.Common/blazorCommon.js"></script>

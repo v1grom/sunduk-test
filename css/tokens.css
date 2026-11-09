@@ -1,0 +1,233 @@
+/* Сгенерировано tools/build.py из tokens.json. Руками не править. */
+
+:root {
+  --font-sans: "Fira Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --radius: 0;
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.5rem;
+  --text-xl: 2rem;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --size-button: 32px;
+  --size-button-small: 26px;
+  --size-input: 32px;
+  --size-chip: 24px;
+  --size-tab: 36px;
+  --size-row: 32px;
+  --size-table-header: 34px;
+  --size-menu-item: 30px;
+  --size-checkbox: 16px;
+  --text-body: 0.875rem;
+  --hit: 32px;
+}
+
+/* Плотность. По умолчанию compact; touch — для пальца. Принудительно: data-density="compact|touch". */
+@media (pointer: coarse) {
+  :root:not([data-density="compact"]) {
+    --size-button: 48px;
+    --size-button-small: 40px;
+    --size-input: 48px;
+    --size-chip: 32px;
+    --size-tab: 48px;
+    --size-row: 48px;
+    --size-table-header: 44px;
+    --size-menu-item: 48px;
+    --size-checkbox: 24px;
+    --text-body: 1rem;
+    --hit: 48px;
+  }
+}
+
+:root[data-density="touch"] {
+  --size-button: 48px;
+  --size-button-small: 40px;
+  --size-input: 48px;
+  --size-chip: 32px;
+  --size-tab: 48px;
+  --size-row: 48px;
+  --size-table-header: 44px;
+  --size-menu-item: 48px;
+  --size-checkbox: 24px;
+  --text-body: 1rem;
+  --hit: 48px;
+}
+
+:root {
+  --bg: #F6F6F4;
+  --surface: #FFFFFF;
+  --hover: #EAEAE7;
+  --border: #D9D9D5;
+  --text: #17181A;
+  --text2: #55585E;
+  --text3: #86898F;
+  --accent: #E90765;
+  --accent-text: #121316;
+  --danger: #DB3C24;
+  --warning: #A26C02;
+  --success: #20884B;
+  --info: #0774E9;
+  --accent-30: rgba(233,7,101,0.3);
+  --accent-12: rgba(233,7,101,0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121316;
+    --surface: #191B1F;
+    --hover: #21242A;
+    --border: #2E323A;
+    --text: #F2F2F0;
+    --text2: #9A9DA3;
+    --text3: #6B6E75;
+    --accent: #E90765;
+    --accent-text: #121316;
+    --danger: #DB3C24;
+    --warning: #A26C02;
+    --success: #20884B;
+    --info: #0774E9;
+    --accent-30: rgba(233,7,101,0.3);
+    --accent-12: rgba(233,7,101,0.12);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #121316;
+  --surface: #191B1F;
+  --hover: #21242A;
+  --border: #2E323A;
+  --text: #F2F2F0;
+  --text2: #9A9DA3;
+  --text3: #6B6E75;
+  --accent: #E90765;
+  --accent-text: #121316;
+  --danger: #DB3C24;
+  --warning: #A26C02;
+  --success: #20884B;
+  --info: #0774E9;
+  --accent-30: rgba(233,7,101,0.3);
+  --accent-12: rgba(233,7,101,0.12);
+}
+
+:root[data-skin="areopag"] {
+  --bg: #F0F2F3;
+  --surface: #FFFFFF;
+  --hover: #E6E9EC;
+  --border: #CCD3D8;
+  --text: #00243D;
+  --text2: #4C6677;
+  --text3: #7B8D9A;
+  --accent: #E63C2F;
+  --accent-text: #FFFFFF;
+  --danger: #C32258;
+  --warning: #84620B;
+  --success: #007547;
+  --info: #1668C5;
+  --accent-30: rgba(230,60,47,0.3);
+  --accent-12: rgba(230,60,47,0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="areopag"]:not([data-theme="light"]) {
+    --bg: #00243D;
+    --surface: #0A2F4C;
+    --hover: #123A59;
+    --border: #2A4E68;
+    --text: #FFFFFF;
+    --text2: #B7C4CE;
+    --text3: #7F92A0;
+    --accent: #E63C2F;
+    --accent-text: #FFFFFF;
+    --danger: #EA809A;
+    --warning: #D09A11;
+    --success: #00AD68;
+    --info: #63A4EE;
+    --accent-30: rgba(230,60,47,0.3);
+    --accent-12: rgba(230,60,47,0.12);
+  }
+}
+
+:root[data-skin="areopag"][data-theme="dark"] {
+  --bg: #00243D;
+  --surface: #0A2F4C;
+  --hover: #123A59;
+  --border: #2A4E68;
+  --text: #FFFFFF;
+  --text2: #B7C4CE;
+  --text3: #7F92A0;
+  --accent: #E63C2F;
+  --accent-text: #FFFFFF;
+  --danger: #EA809A;
+  --warning: #D09A11;
+  --success: #00AD68;
+  --info: #63A4EE;
+  --accent-30: rgba(230,60,47,0.3);
+  --accent-12: rgba(230,60,47,0.12);
+}
+
+:root[data-skin="sunduk"] {
+  --bg: #F3F3F3;
+  --surface: #FFFFFF;
+  --hover: #E8E8E8;
+  --border: #D4D4D4;
+  --text: #1E1E1E;
+  --text2: #555555;
+  --text3: #808080;
+  --accent: #E64A19;
+  --accent-text: #FFFFFF;
+  --danger: #C32258;
+  --warning: #8A5A00;
+  --success: #16794A;
+  --info: #0F66C2;
+  --accent-30: rgba(230,74,25,0.3);
+  --accent-12: rgba(230,74,25,0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="sunduk"]:not([data-theme="light"]) {
+    --bg: #1E1E1E;
+    --surface: #252526;
+    --hover: #2D2D30;
+    --border: #3E3E42;
+    --text: #D2D2D2;
+    --text2: #A5A5A5;
+    --text3: #7C7C7C;
+    --accent: #FF5722;
+    --accent-text: #1E1E1E;
+    --danger: #F0647E;
+    --warning: #E0A30B;
+    --success: #3DB57F;
+    --info: #5AA9F5;
+    --accent-30: rgba(255,87,34,0.3);
+    --accent-12: rgba(255,87,34,0.12);
+  }
+}
+
+:root[data-skin="sunduk"][data-theme="dark"] {
+  --bg: #1E1E1E;
+  --surface: #252526;
+  --hover: #2D2D30;
+  --border: #3E3E42;
+  --text: #D2D2D2;
+  --text2: #A5A5A5;
+  --text3: #7C7C7C;
+  --accent: #FF5722;
+  --accent-text: #1E1E1E;
+  --danger: #F0647E;
+  --warning: #E0A30B;
+  --success: #3DB57F;
+  --info: #5AA9F5;
+  --accent-30: rgba(255,87,34,0.3);
+  --accent-12: rgba(255,87,34,0.12);
+}

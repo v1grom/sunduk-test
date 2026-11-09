@@ -13,7 +13,13 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"><defs
-     id="defs1230" /><sodipodi:namedview
+     id="defs1230">
+    <!-- Знак внутри QR — растровый оранжевый; заливка акцентом по его альфа-каналу, чтобы цвет подменялся вместе с палитрой -->
+    <filter id="accent-fill" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+      <feFlood flood-color="#ff5722" result="flood" />
+      <feComposite in="flood" in2="SourceAlpha" operator="in" />
+    </filter>
+  </defs><sodipodi:namedview
      id="namedview1228"
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -2453,4 +2459,5 @@
      height="261"
      x="395.125"
      y="395.125"
-     id="image1224" /></svg>
+     id="image1224"
+     filter="url(#accent-fill)" /></svg>

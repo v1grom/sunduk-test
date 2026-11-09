@@ -1,12 +1,12 @@
 /* ============================================================
    Sunduk — Site CSS
-   Inter (body) + JetBrains Mono (mono/code)
+   Fira Sans (body) + JetBrains Mono (mono/code)
    Fonts are self-hosted (see css/fonts.css). Typography is the
    single source of truth via MudTheme.Typography in Infrastructure/Theme.cs.
    ============================================================ */
 
 :root {
-    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-ui: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
 }
 
@@ -21,15 +21,18 @@ html, body {
     padding: 0;
 }
 
-html.mud-dark, body.mud-dark {
-    background: #181A1B;
-    color: rgba(255,255,255, 0.87);
+/* Цвета страницы — из токенов дизайн-системы (css/tokens.css), скин и тема заданы атрибутами <html> */
+html, body {
+    background: var(--bg);
+    color: var(--text);
 }
 
-html.mud-light, body.mud-light {
-    background: #F5F5F5;
-    color: rgba(0,0,0, 0.87);
+/* Плотность touch (палец): базовый размер 16px, см. design/personal-design-system.md, «Плотность и касание».
+   Размеры rem-компонентов MudBlazor растут вместе с ним. */
+@media (pointer: coarse) {
+    html:not([data-density="compact"]), html:not([data-density="compact"]) body { font-size: 16px; }
 }
+html[data-density="touch"], html[data-density="touch"] body { font-size: 16px; }
 
 /* --- Monospace --- */
 
@@ -93,7 +96,7 @@ html.mud-light, body.mud-light {
 }
 
 .knowledgetable {
-    border: 1px solid gray;
+    border: 1px solid var(--border);
     border-collapse: collapse;
     text-align: center;
     padding: 4px;
@@ -128,8 +131,14 @@ textarea[style*="JetBrains Mono"] {
     border: none;
 }
 
-.section-button:hover {
-    background-color: var(--mud-palette-surface-hover, rgba(255,255,255,0.06));
+@media (hover: hover) {
+    .section-button:hover {
+        background-color: var(--hover);
+    }
+}
+
+.section-button:active {
+    background-color: var(--hover);
 }
 
 /* --- Smooth theme transition --- */
@@ -144,7 +153,7 @@ html.theme-transition *::after {
 /* --- Selection color --- */
 
 ::selection {
-    background: rgba(245, 158, 11, 0.3);
+    background: var(--accent-30);
     color: inherit;
 }
 

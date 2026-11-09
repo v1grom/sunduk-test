@@ -4,6 +4,34 @@
    Height is controlled via Margin="Margin.Dense" in razor files
    ============================================================ */
 
+/* --- Размеры по плотности ---
+   Основные размеры (--size-*, --hit) приходят из tokens.css и сами переключаются между compact и touch.
+   Тех, чего нет в токенах (кнопка-значок, отступы полей), — свои переменные с той же логикой переключения.
+   Список условий touch совпадает с tokens.css: pointer: coarse или data-density="touch". */
+
+:root {
+    --icon-button: 32px;
+    --field-pad-y: 0px;
+    --appbar-height: 40px;
+    --bottom-nav: 52px;
+}
+
+@media (pointer: coarse) {
+    :root:not([data-density="compact"]) {
+        --icon-button: var(--hit);
+        --field-pad-y: 10px;
+        --appbar-height: 48px;
+        --bottom-nav: 56px;
+    }
+}
+
+:root[data-density="touch"] {
+    --icon-button: var(--hit);
+    --field-pad-y: 10px;
+    --appbar-height: 48px;
+    --bottom-nav: 56px;
+}
+
 /* --- Global border-radius reset --- */
 
 .mud-button,
@@ -54,19 +82,22 @@
     letter-spacing: 0.02em;
     text-transform: none;
     padding: 4px 14px;
-    min-height: 32px;
+    min-height: var(--size-button);
 }
 
 .mud-button-text-size-small,
 .mud-button-filled-size-small,
 .mud-button-outlined-size-small {
     padding: 2px 10px;
-    min-height: 28px;
+    min-height: var(--size-button-small);
     font-size: 0.78rem;
 }
 
 .mud-icon-button {
     padding: 4px;
+    min-width: var(--icon-button);
+    min-height: var(--icon-button);
+    box-sizing: border-box;
 }
 
 .mud-icon-button .mud-icon-size-medium {
@@ -77,7 +108,7 @@
 
 .mud-chip {
     font-size: 0.72rem;
-    height: 24px;
+    height: var(--size-chip);
     padding: 0 8px;
 }
 
@@ -109,6 +140,7 @@
 /* --- Compact table --- */
 
 .mud-table .mud-table-head .mud-table-cell {
+    height: var(--size-table-header);
     font-size: 0.72rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -117,12 +149,13 @@
 }
 
 .mud-table .mud-table-body .mud-table-cell {
+    height: var(--size-row);
     font-size: 0.82rem;
     padding: 4px 10px;
 }
 
 .mud-table .mud-table-row {
-    min-height: 36px;
+    min-height: var(--size-row);
 }
 
 .mud-table-dense .mud-table-body .mud-table-cell {
@@ -132,11 +165,13 @@
 /* --- Compact list --- */
 
 .mud-list-item {
+    min-height: var(--size-menu-item);
     padding: 2px 10px;
     font-size: 0.85rem;
 }
 
 .mud-nav-link {
+    min-height: var(--size-menu-item);
     padding: 4px 16px;
     font-size: 0.85rem;
 }
@@ -149,7 +184,7 @@
 }
 
 .mud-tabs-tabbar .mud-tabs-tabbar-inner {
-    min-height: 40px;
+    min-height: var(--size-tab);
     align-items: center;
 }
 
@@ -158,7 +193,7 @@
     letter-spacing: 0.02em;
     text-transform: none;
     padding: 8px 14px;
-    min-height: 36px;
+    min-height: var(--size-tab);
     min-width: auto;
     align-items: center;
     justify-content: center;
@@ -192,7 +227,7 @@
 
 .mud-appbar .mud-toolbar {
     padding: 0 8px;
-    min-height: 40px;
+    min-height: var(--appbar-height);
 }
 
 .mud-appbar .mud-icon-button {
@@ -222,7 +257,7 @@
 
 .calculator-key {
     min-width: 0;
-    min-height: 44px;
+    min-height: var(--size-button);
     padding: 0 2px;
     font-size: clamp(0.78rem, 3.6vw, 0.95rem);
     overflow: hidden;
@@ -234,13 +269,20 @@
     background-color: var(--mud-palette-background-gray) !important;
 }
 
-.calculator-key-num:hover {
+@media (hover: hover) {
+    .calculator-key-num:hover {
+        background-color: var(--mud-palette-action-default-hover) !important;
+    }
+}
+
+.calculator-key-num:active {
     background-color: var(--mud-palette-action-default-hover) !important;
 }
 
-@media (min-width: 960px) {
+/* На телефоне клавиши калькулятора крупнее кнопок: по ним бьют быстро и не глядя */
+@media (max-width: 959.98px) {
     .calculator-key {
-        min-height: 36px;
+        min-height: max(44px, var(--size-button));
     }
 }
 
@@ -277,11 +319,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.15);
+    background: var(--border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.25);
+    background: var(--text3);
 }
 
 /* --- MudSelect dropdown list --- */
@@ -336,7 +378,7 @@
         bottom: 0;
         z-index: 1100;
         display: flex;
-        height: calc(52px + env(safe-area-inset-bottom));
+        height: calc(var(--bottom-nav) + env(safe-area-inset-bottom));
         padding-bottom: env(safe-area-inset-bottom);
         background: var(--mud-palette-appbar-background);
         border-top: 1px solid var(--mud-palette-lines-default);
@@ -355,7 +397,7 @@
         background: none;
         color: var(--mud-palette-text-secondary);
         font: inherit;
-        font-size: 0.68rem;
+        font-size: 0.75rem;
         text-decoration: none;
         cursor: pointer;
     }
@@ -366,7 +408,7 @@
 
     /* Контент не должен прятаться под панелью */
     .main-content-with-bottom-nav {
-        padding-bottom: calc(52px + env(safe-area-inset-bottom));
+        padding-bottom: calc(var(--bottom-nav) + env(safe-area-inset-bottom));
     }
 }
 
@@ -412,7 +454,7 @@
     align-items: center;
     gap: 12px;
     width: 100%;
-    min-height: 52px;
+    min-height: max(52px, var(--size-row));
     padding: 6px 8px;
     border: 0;
     border-bottom: 1px solid var(--mud-palette-lines-default);
@@ -423,8 +465,10 @@
     cursor: pointer;
 }
 
-.tool-row:hover {
-    background: var(--mud-palette-table-hover);
+@media (hover: hover) {
+    .tool-row:hover {
+        background: var(--mud-palette-table-hover);
+    }
 }
 
 .tool-row-number {
@@ -470,4 +514,87 @@
 
 .mud-input.mud-input-text.mud-input-margin-dense > .mud-input-adornment .mud-typography {
     line-height: inherit;
+}
+
+/* --- Поля ввода для пальца ---
+   Подчёркнутые поля Mud в dense-режиме ниже 32px. Для touch поднимаем высоту до --size-input
+   и ставим текст по центру, adornment остаётся в одной линии со значением (см. блок выше). */
+
+@media (pointer: coarse) {
+    :root:not([data-density="compact"]) .mud-input.mud-input-text.mud-input-margin-dense {
+        min-height: var(--size-input);
+    }
+}
+
+:root[data-density="touch"] .mud-input.mud-input-text.mud-input-margin-dense {
+    min-height: var(--size-input);
+}
+
+/* Размер шрифта поля не меньше 16px: иначе iOS приближает страницу при фокусе */
+@media (pointer: coarse) {
+    .mud-input-root, .mud-input-slot { font-size: max(16px, 1em); }
+}
+
+/* --- Нажатие --- (hover на касании не показывается, нужен отклик под пальцем) */
+.mud-button-text:active:not(:disabled),
+.mud-button-outlined:active:not(:disabled),
+.mud-icon-button:active:not(:disabled),
+.bottom-nav-item:active,
+.tool-row:active,
+.mud-list-item:active,
+.mud-nav-link:active {
+    background-color: var(--hover);
+}
+
+/* Залитая кнопка при нажатии темнеет, как в дизайн-системе (прозрачность 0.75) */
+.mud-button-filled:active:not(:disabled) {
+    opacity: 0.75;
+}
+
+/* Единица измерения (adornment) в touch стоит по центру поля, как и значение:
+   в compact её держит верхний отступ 3px, но при высоте 48px текст поля уходит вниз. */
+@media (pointer: coarse) {
+    :root:not([data-density="compact"]) .mud-input.mud-input-text.mud-input-margin-dense > .mud-input-adornment {
+        align-self: center;
+        padding-top: 0;
+    }
+}
+
+:root[data-density="touch"] .mud-input.mud-input-text.mud-input-margin-dense > .mud-input-adornment {
+    align-self: center;
+    padding-top: 0;
+}
+
+/* Заголовки раскрывающихся блоков и строки списков — тоже цели для пальца */
+.mud-expand-panel .mud-expand-panel-header {
+    min-height: var(--size-row);
+}
+
+.mud-expand-panel-header .mud-expand-panel-text {
+    align-self: center;
+}
+
+/* Подпись и значение в подчёркнутом поле для пальца: поле растёт до --size-input, значение по центру,
+   плавающая подпись сдвигается на те же 7px (иначе она остаётся у верхней границы, а единица измерения
+   уже по центру). Строки ниже повторяют условие touch: pointer: coarse или data-density="touch". */
+@media (pointer: coarse) {
+    :root:not([data-density="compact"]) .mud-input.mud-input-text.mud-input-margin-dense { align-items: center; }
+    :root:not([data-density="compact"]) .mud-input-label-inputcontrol.mud-input-label-text.mud-input-label-margin-dense:not(.mud-shrink) { top: 7px; }
+}
+
+:root[data-density="touch"] .mud-input.mud-input-text.mud-input-margin-dense { align-items: center; }
+:root[data-density="touch"] .mud-input-label-inputcontrol.mud-input-label-text.mud-input-label-margin-dense:not(.mud-shrink) { top: 7px; }
+
+/* Панели инструментов страниц переносятся: кнопки по 48px не помещаются в одну строку на телефоне */
+.mud-main-content .mud-toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    row-gap: 4px;
+}
+
+
+/* Группы кнопок тоже переносятся, а не обрезаются картой (панель SunduCAM на телефоне) */
+.mud-main-content .mud-button-group-root {
+    flex-wrap: wrap;
+    row-gap: 4px;
 }
