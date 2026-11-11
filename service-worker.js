@@ -1,4 +1,4 @@
-/* Manifest version: HnEIFW6l */
+/* Manifest version: DFWZF3de */
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
@@ -40,6 +40,16 @@ const offlineAssetsExclude = [
 // завершиться — тогда офлайн-кэша не появляется вообще.
 const installBatchSize = 16;
 
+// Файлы с отпечатком в имени (name.abc123defg.ext) неизменны — им годится HTTP-кэш.
+// Остальные (_framework/dotnet.js со списком сборок приложения, js/*.js, manifest)
+// nginx отдаёт с max-age на неделю: без ревалидации телефон неделю грузит старый
+// dotnet.js, а по нему — старые сборки, при том что index.html и SW уже новые.
+const fingerprinted = /\.[a-z0-9]{10}\.[a-z0-9]+$/;
+function cacheModeFor(url) {
+    const path = new URL(url, self.location.href).pathname;
+    return fingerprinted.test(path) ? 'default' : 'no-cache';
+}
+
 // Сколько ждём сеть при навигации, прежде чем отдать index.html из кэша.
 const navigationTimeoutMs = 3000;
 
@@ -53,7 +63,7 @@ async function onInstall(event) {
     const allRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash }));
+        .map(asset => new Request(asset.url, { integrity: asset.hash, cache: cacheModeFor(asset.url) }));
 
     const total = allRequests.length;
     const cache = await caches.open(cacheName);
@@ -140,7 +150,7 @@ async function onFetch(event) {
     // из 242 запросов (1.0 с со включённым перехватом против 6.0 с без него).
     let networkResponse = null;
     try {
-        networkResponse = await fetch(event.request);
+        networkResponse = await fetch(event.request, { cache: cacheModeFor(event.request.url) });
     } catch (e) {
         console.info('Service worker: сеть недоступна, беру ассет из офлайн-кэша:', event.request.url, e);
     }

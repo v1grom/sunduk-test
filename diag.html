@@ -63,6 +63,21 @@
             lines.push('  обычный путь: ' + viaDefault);
             lines.push('  с сервера:    ' + viaFresh + (viaDefault !== viaFresh ? '   <-- РАЗНЫЕ: старый index.html из кэша' : ''));
 
+            // dotnet.js без хэша в имени и со списком сборок приложения: если из обычного
+            // пути приходит не то же, что с сервера, телефон грузит старые сборки.
+            const dotnetOf = async init => {
+                try {
+                    const t = await (await fetch('_framework/dotnet.js', init)).text();
+                    const m = /Sunduk\.[a-z0-9]{10}\.dll/.exec(t);
+                    return `${t.length} байт, ${m ? m[0] : 'Sunduk.dll не найден'}`;
+                } catch (e) { return 'ошибка: ' + e.message; }
+            };
+            const dnDefault = await dotnetOf({ cache: 'default' });
+            const dnFresh = await dotnetOf({ cache: 'reload' });
+            lines.push('', '_framework/dotnet.js:');
+            lines.push('  обычный путь: ' + dnDefault);
+            lines.push('  с сервера:    ' + dnFresh + (dnDefault !== dnFresh ? '   <-- РАЗНЫЕ: старый dotnet.js из кэша' : ''));
+
             lines.push('', 'Кэши:');
             const keys = await caches.keys();
             if (!keys.length) lines.push('  нет');
