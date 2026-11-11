@@ -48,6 +48,21 @@
                 lines.push('', 'Версия на сервере: ' + (m ? m[1] : '?'));
             } catch (e) { lines.push('', 'Версия на сервере: не получена (' + e.message + ')'); }
 
+            // Какую сборку получит страница: из обычного пути (HTTP-кэш) и с принудительной
+            // ревалидацией. Если отличаются — телефон застрял на старом index.html.
+            const bootOf = async init => {
+                try {
+                    const html = await (await fetch('./index.html', init)).text();
+                    const m = /blazor\.webassembly\.([A-Za-z0-9]+)\.js/.exec(html);
+                    return m ? m[1] : 'не найден';
+                } catch (e) { return 'ошибка: ' + e.message; }
+            };
+            const viaDefault = await bootOf({ cache: 'default' });
+            const viaFresh = await bootOf({ cache: 'reload' });
+            lines.push('', 'index.html → blazor.webassembly:');
+            lines.push('  обычный путь: ' + viaDefault);
+            lines.push('  с сервера:    ' + viaFresh + (viaDefault !== viaFresh ? '   <-- РАЗНЫЕ: старый index.html из кэша' : ''));
+
             lines.push('', 'Кэши:');
             const keys = await caches.keys();
             if (!keys.length) lines.push('  нет');

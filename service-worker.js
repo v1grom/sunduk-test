@@ -1,4 +1,4 @@
-/* Manifest version: FoZjVomx */
+/* Manifest version: Cj8ZhJUW */
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
@@ -169,7 +169,11 @@ async function fetchWithTimeout(request, timeoutMs) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-        return await fetch(request, { signal: controller.signal });
+        // cache: 'no-cache' — всегда ревалидировать index.html на сервере (304, если не
+        // менялся). Иначе nginx без Cache-Control даёт браузеру право по эвристике
+        // (10% от возраста Last-Modified) часами отдавать старый index.html из
+        // HTTP-кэша, и телефон остаётся на старой сборке при свежем SW-кэше.
+        return await fetch(request, { signal: controller.signal, cache: 'no-cache' });
     } finally {
         clearTimeout(timer);
     }
