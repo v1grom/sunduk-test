@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sunduk — диагностика офлайна</title>
+    <style>
+        body { font: 14px/1.4 system-ui, sans-serif; margin: 12px; background: #fff; color: #111; }
+        h1 { font-size: 18px; }
+        pre { white-space: pre-wrap; word-break: break-all; background: #f2f2f2; padding: 8px; border-radius: 6px; }
+        button { font-size: 15px; padding: 8px 12px; margin: 4px 4px 4px 0; }
+        @media (prefers-color-scheme: dark) { body { background: #111; color: #eee; } pre { background: #222; } }
+    </style>
+</head>
+<body>
+    <h1>Диагностика офлайна</h1>
+    <button id="refresh">Обновить</button>
+    <button id="update">Проверить обновление</button>
+    <button id="reset">Сбросить воркер и кэш</button>
+    <pre id="out">загрузка…</pre>
+    <script>
+        const out = document.getElementById('out');
+        const swInfo = w => w ? `${w.state} ${w.scriptURL}` : '—';
+
+        async function render() {
+            const lines = [];
+            lines.push('Время: ' + new Date().toLocaleString());
+            lines.push('Сеть: ' + (navigator.onLine ? 'онлайн' : 'офлайн'));
+            lines.push('Страница загрузилась под воркером: ' + (navigator.serviceWorker && navigator.serviceWorker.controller ? 'да' : 'нет'));
+            try { lines.push('Версия приложения в сессии: ' + (sessionStorage.getItem('sunduk.swVersion') ?? '—')); } catch { }
+
+            if (!('serviceWorker' in navigator)) { out.textContent = 'service worker не поддерживается'; return; }
+
+            const regs = await navigator.serviceWorker.getRegistrations();
+            lines.push('', 'Регистраций: ' + regs.length);
+            for (const r of regs) {
+                lines.push('scope: ' + r.scope);
+                lines.push('  installing: ' + swInfo(r.installing));
+                lines.push('  waiting:    ' + swInfo(r.waiting));
+                lines.push('  active:     ' + swInfo(r.active));
+                lines.push('  updateViaCache: ' + r.updateViaCache);
+            }
+
+            // Версия манифеста в текущем service-worker-assets.js на сервере.
+            try {
+                const text = await (await fetch('service-worker-assets.js', { cache: 'no-store' })).text();
+                const m = /"version":\s*"([^"]+)"/.exec(text);
+                lines.push('', 'Версия на сервере: ' + (m ? m[1] : '?'));
+            } catch (e) { lines.push('', 'Версия на сервере: не получена (' + e.message + ')'); }
+
+            lines.push('', 'Кэши:');
+            const keys = await caches.keys();
+            if (!keys.length) lines.push('  нет');
+            for (const k of keys) {
+                const cache = await caches.open(k);
+                const reqs = await cache.keys();
+                const marker = reqs.some(r => r.url.endsWith('/__sunduk_offline_ready__'));
+                lines.push(`  ${k}: ${reqs.length} файлов, маркер готовности: ${marker ? 'ЕСТЬ' : 'нет'}`);
+            }
+
+            if (navigator.storage && navigator.storage.estimate) {
+                const e = await navigator.storage.estimate();
+                lines.push('', `Хранилище: ${(e.usage / 1048576).toFixed(0)} МБ из ${(e.quota / 1048576).toFixed(0)} МБ`);
+            }
+            out.textContent = lines.join('\n');
+        }
+
+        document.getElementById('refresh').onclick = render;
+        document.getElementById('update').onclick = async () => {
+            out.textContent = 'проверяю обновление…';
+            try { for (const r of await navigator.serviceWorker.getRegistrations()) await r.update(); } catch (e) { out.textContent = 'ошибка: ' + e.message; return; }
+            setTimeout(render, 1500);
+        };
+        document.getElementById('reset').onclick = async () => {
+            if (!confirm('Удалить воркер и офлайн-кэш? Данные приложения (станки, инструмент) не затрагиваются.')) return;
+            for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();
+            for (const k of await caches.keys()) await caches.delete(k);
+            out.textContent = 'Сброшено. Откройте приложение заново и подождите, пока соберётся кэш.';
+        };
+
+        navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', e => {
+            if (e.data && e.data.type === 'offline-progress') document.title = `Кэш ${e.data.cached}/${e.data.total}`;
+        });
+        setInterval(render, 5000);
+        render();
+    </script>
+</body>
+</html>

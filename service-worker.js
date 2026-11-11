@@ -1,4 +1,4 @@
-/* Manifest version: uvVdOUgd */
+/* Manifest version: FoZjVomx */
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
@@ -50,15 +50,22 @@ async function onInstall(event) {
     self.skipWaiting();
 
     // Fetch and cache all matching items from the assets manifest
-    const assetsRequests = self.assetsManifest.assets
+    const allRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash }));
 
-    const total = assetsRequests.length;
+    const total = allRequests.length;
     const cache = await caches.open(cacheName);
+
+    // Кэш этой версии переживает прерванную установку (мобильный браузер убивает
+    // воркер в фоне, а скачивание идёт минуты). Уже лежащие в нём файлы не качаем
+    // заново — иначе каждая попытка начиналась бы с нуля и могла не завершиться никогда.
+    const alreadyCached = new Set((await cache.keys()).map(r => r.url));
+    const assetsRequests = allRequests.filter(r => !alreadyCached.has(r.url));
     const failed = [];
-    let done = 0;
+    let done = total - assetsRequests.length;
+    if (done > 0) console.info(`Service worker: в кэше уже ${done} из ${total}, докачиваю остальное`);
 
     for (let i = 0; i < assetsRequests.length; i += installBatchSize) {
         const batch = assetsRequests.slice(i, i + installBatchSize);
