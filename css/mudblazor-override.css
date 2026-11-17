@@ -612,3 +612,59 @@
 svg text {
     font-family: 'JetBrains Mono', monospace;
 }
+
+/* --- Полоса вкладок раздела --- */
+
+.tab-strip {
+    position: sticky;
+    top: var(--appbar-height);
+    z-index: 5;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: var(--mud-palette-background);
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.tab-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-strip-item {
+    flex: 0 0 auto;
+    padding: 0 16px;
+    height: 44px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--mud-palette-text-secondary);
+    font: inherit;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.tab-strip-item:hover {
+    color: var(--mud-palette-text-primary);
+}
+
+.tab-strip-item.active {
+    color: var(--mud-palette-primary);
+    border-bottom-color: var(--mud-palette-primary);
+}
+
+/* Затухание у края, за которым есть ещё вкладки */
+.tab-strip.can-scroll-left {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px);
+    mask-image: linear-gradient(to right, transparent 0, #000 28px);
+}
+
+.tab-strip.can-scroll-right {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+}
+
+.tab-strip.can-scroll-left.can-scroll-right {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+}

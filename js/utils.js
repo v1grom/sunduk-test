@@ -152,3 +152,34 @@ window.sundukOffline = (() => {
         }
     };
 })();
+
+// Выделение в поле ввода: позиция курсора нужна экранной клавиатуре калькулятора.
+window.sundukInput = {
+    selection: id => {
+        const el = document.getElementById(id);
+        return el ? [el.selectionStart ?? 0, el.selectionEnd ?? 0] : [0, 0];
+    }
+};
+
+// Полоса вкладок: подсказки о прокрутке по краям и показ активной вкладки.
+window.sundukTabs = {
+    attach: (strip, activeIndex) => {
+        if (!strip) return;
+        const update = () => {
+            strip.classList.toggle('can-scroll-left', strip.scrollLeft > 1);
+            strip.classList.toggle('can-scroll-right', strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 1);
+        };
+        if (!strip.dataset.bound) {
+            strip.dataset.bound = '1';
+            strip.addEventListener('scroll', update, { passive: true });
+            window.addEventListener('resize', update);
+        }
+        const item = strip.children[activeIndex];
+        if (item) {
+            // Активная вкладка по центру, но без прокрутки за края
+            const target = item.offsetLeft - (strip.clientWidth - item.offsetWidth) / 2;
+            strip.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+        }
+        update();
+    }
+};
