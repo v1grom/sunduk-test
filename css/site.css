@@ -141,6 +141,109 @@ textarea[style*="JetBrains Mono"] {
     background-color: var(--hover);
 }
 
+/* Пояснение к расчёту (CalcNote): формулы и допущения, приглушённым цветом */
+.calc-note {
+    color: var(--mud-palette-text-secondary);
+}
+
+.calc-note + .calc-note {
+    margin-top: 8px;
+}
+
+/* Эскизы расчётов (Components/Sketches): схема не в масштабе, цвета из темы.
+   Деталь — сплошной линией с лёгкой заливкой, инструмент — штриховой, размер поля в фокусе — акцентом */
+.sketch svg {
+    display: block;
+}
+
+/* На телефоне (xs) эскизы не показываются — вместе с ячейкой сетки, чтобы не оставалось пустого места */
+@media (max-width: 599.98px) {
+    .sketch,
+    .mud-grid-item:has(> .sketch) {
+        display: none !important;
+    }
+}
+
+.sketch text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    fill: var(--mud-palette-text-secondary);
+}
+
+.sk-part {
+    fill: var(--mud-palette-text-secondary);
+    fill-opacity: 0.08;
+    stroke: var(--mud-palette-text-secondary);
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.sk-line {
+    fill: none;
+    stroke: var(--mud-palette-text-secondary);
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.sk-tool {
+    fill: none;
+    stroke: var(--mud-palette-text-secondary);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 3;
+    stroke-linejoin: round;
+}
+
+.sk-axis {
+    stroke: var(--mud-palette-text-secondary);
+    stroke-width: 1;
+    stroke-dasharray: 10 3 2 3;
+    opacity: 0.7;
+}
+
+.sk-thin {
+    fill: none;
+    stroke: var(--mud-palette-text-secondary);
+    stroke-width: 1;
+    opacity: 0.7;
+}
+
+.sk-chip {
+    fill: var(--mud-palette-primary);
+    fill-opacity: 0.25;
+    stroke: none;
+}
+
+.sk-dim line,
+.sk-angle path {
+    fill: none;
+    stroke: var(--mud-palette-text-secondary);
+    stroke-width: 1;
+}
+
+.sk-dim path {
+    fill: var(--mud-palette-text-secondary);
+}
+
+.sk-dim.active line,
+.sk-angle.active path,
+.sk-tool.active,
+.sk-line.active {
+    stroke: var(--mud-palette-primary);
+}
+
+.sk-dim.active path,
+.sk-dim.active text,
+.sk-angle.active text,
+.sketch text.active {
+    fill: var(--mud-palette-primary);
+}
+
+/* Подпись группы разделов в меню и на главной */
+.nav-group-title {
+    color: var(--mud-palette-text-secondary);
+    letter-spacing: 0.08em;
+}
+
 /* --- Smooth theme transition --- */
 
 html.theme-transition,

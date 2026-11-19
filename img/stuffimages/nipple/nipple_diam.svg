@@ -373,6 +373,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-43.8235,-67.592066)">
+    <path id="part-fill" style="fill:#bfbfbf;fill-opacity:0.08;stroke:none" d="M 45.484958,91.603808 L 67.507111,91.599108 A 26.458334,26.458334 0 0 1 85.886615,99.02491 V 124.2129 H 45.484958 Z" />
     <path
        style="fill:none;stroke:#bfbfbf;stroke-width:0.529167;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker110757682)"
        d="M 60.257248,93.225322 V 114.58065"

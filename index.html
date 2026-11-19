@@ -19,7 +19,9 @@
     }
 
     .logo {
+        /* высота обязательна: у пустого span с масками нет своего размера, в отличие от прежнего img */
         width: 75px;
+        height: 75px;
         -webkit-animation-name: rotation;
         -webkit-animation-duration: 2s;
         -webkit-animation-iteration-count: infinite;
@@ -96,7 +98,7 @@
 
         100% {
             -webkit-transform: rotate(360deg);
-            -moz-transform: rotate(720deg);
+            -moz-transform: rotate(360deg);
             -o-transform: rotate(360deg);
             transform: rotate(360deg);
         }
